@@ -16,6 +16,14 @@ def display(data):
 def recv(ch, method, properties, body):
 	print(" [x] Received ")
 	display(body)
+	amuda = '172.17.137.155'
+	cse = '172.17.137.160'
+	parts = body.split(",")
+	print(parts[0])
+	if(parts[0]==amuda):
+		print('AMuDA Lab')
+	elif(parts[0]==cse):
+		print('CSE department')
 
 
 channel.basic_consume(recv,queue="mercury",no_ack=True)
