@@ -19,7 +19,7 @@ def recv(ch, method, properties, body):
 	amuda = '172.17.137.155'
 	cse = '172.17.137.160'
 	parts = body.split(",")
-	print(parts[0])
+	print(parts)
 	if(parts[0]==amuda):
 		print('AMuDA Lab')
 	elif(parts[0]==cse):

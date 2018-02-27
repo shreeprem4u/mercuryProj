@@ -23,13 +23,14 @@ reader.set_read_plan([1,2], "GEN2")
 
 '''
 ESTABLISHING CONNECTION WITH RABBITMQ :
-test,test - USERNAME AND PASSWORD OF RABBITMQ SERVER
+test,test - USERNAME AND PASSWORD OF RABBITMQ SERVER(172.17.137.155)(system:ACER2)
+amuda,amuda2017 - USERNAME AND PASSWORD OF RABBITMQ SERVER(172.17.137.160)(system:Amuda5036)
 IP ADDR - IP ADDR OF RABBITMQ SERVER
 5672 - PORT NUMBER FOR ACCESSING RABBITMQ
 amudavhost - VIRTUAL HOST NAME IN RABBITMQ
 mercury - QUEUE NAME
 '''
-credentials = pika.PlainCredentials('test', 'test') #username,password for rabbitMq
+credentials = pika.PlainCredentials('test', 'test') #username,password for rabbitMq.
 parameters = pika.ConnectionParameters('172.17.137.155',5672,'amudavhost',credentials)
 connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
@@ -49,7 +50,8 @@ def send(epc,ant,rssi):
 	s.connect(("8.8.8.8", 80))
 	ip = s.getsockname()[0]
 	s.close()
-	msg = ip+","+epc+","+str(ant)+","+str(rssi)+","+str(dist)+","+timestamp
+#	msg = ip+","+epc+","+str(ant)+","+str(rssi)+","+str(dist)+","+timestamp
+	msg = ip+","+epc+","+timestamp
 	channel.basic_publish(exchange='', routing_key='mercury', body=msg)
 	print("[x] Sent ")
 	display(msg)
