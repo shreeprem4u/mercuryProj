@@ -1,10 +1,13 @@
 from __future__ import print_function
-import time
+from time import localtime, strftime
 import mercury
 import pika	#FOR RABBITMQ
 import math
 from datetime import datetime
+import time
 import socket	#TO GET IP ADDRESS OF THE MACHINE
+
+
 
 
 
@@ -35,8 +38,8 @@ parameters = pika.ConnectionParameters('172.17.137.155',5672,'amudavhost',creden
 connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 channel.queue_declare(queue="mercury")
-
-
+dic = {}
+data = []
 def display(data):
 	print(data)
 
@@ -45,19 +48,24 @@ def display(data):
 #FUNCTION DEFINITION
 def send(epc,ant,rssi):
 	dist =math.pow(10,(-52-rssi)/22.0)	#n=1.8, -52 is RSSI at 1 metre distance from antenna
-	timestamp = str(datetime.now())
+	timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime())
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #These four lines for getting IP address of the machine
 	s.connect(("8.8.8.8", 80))
 	ip = s.getsockname()[0]
 	s.close()
-#	msg = ip+","+epc+","+str(ant)+","+str(rssi)+","+str(dist)+","+timestamp
-	msg = ip+","+epc+","+timestamp
-	channel.basic_publish(exchange='', routing_key='mercury', body=msg)
-	print("[x] Sent ")
-	display(msg)
-	
+
+#	dic[epc+","+ip] = ip+","+epc+","+timestamp	#It works perfectly.
+	dic[epc] = ip+","+epc+","+timestamp
+
 
 #READING OF TAGS
 reader.start_reading(lambda tag: send(tag.epc, tag.antenna, tag.rssi))
-time.sleep(0.05)	#need to increase the value for more tags to read. This is for one tag
+time.sleep(1.0)	#need to increase the value for more tags to read. This is for one tag
+
+msg = str(dic.items())
+channel.basic_publish(exchange='', routing_key='mercury', body=msg)
+print("[x] Sent ")
+display(msg)
+
+#print(dic.items())
 reader.stop_reading()
