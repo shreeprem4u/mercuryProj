@@ -1,4 +1,5 @@
 import pika
+import json
 
 #ESTABLISHING CONNECTION WITH RABBITMQ
 credentials = pika.PlainCredentials('test', 'test') #username,password for rabbitMq
@@ -19,7 +20,7 @@ def recv(ch, method, properties, body):
 	amuda = '172.17.137.155'
 	cse = '172.17.137.160'
 	parts = body.split(",")
-	print(parts)
+//	print(parts[0])
 	if(parts[0]==amuda):
 		print('AMuDA Lab')
 	elif(parts[0]==cse):

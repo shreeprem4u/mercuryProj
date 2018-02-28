@@ -6,7 +6,7 @@ import math
 from datetime import datetime
 import time
 import socket	#TO GET IP ADDRESS OF THE MACHINE
-
+import json
 
 
 
@@ -57,15 +57,19 @@ def send(epc,ant,rssi):
 #	dic[epc+","+ip] = ip+","+epc+","+timestamp	#It works perfectly.
 	dic[epc] = ip+","+epc+","+timestamp
 
-
+#	msg = ip+","+epc+","+timestamp
+#	channel.basic_publish(exchange='', routing_key='mercury', body=msg)
+#	print("[x] Sent ")
+#	display(msg)
 #READING OF TAGS
 reader.start_reading(lambda tag: send(tag.epc, tag.antenna, tag.rssi))
 time.sleep(1.0)	#need to increase the value for more tags to read. This is for one tag
-
-msg = str(dic.items())
-channel.basic_publish(exchange='', routing_key='mercury', body=msg)
-print("[x] Sent ")
-display(msg)
+reader.stop_reading()
+for key, value in dic.iteritems():
+	msg = value
+	channel.basic_publish(exchange='', routing_key='mercury', body=msg)
+	print("[x] Sent ")
+	display(msg)
 
 #print(dic.items())
-reader.stop_reading()
+
