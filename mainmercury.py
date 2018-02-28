@@ -33,8 +33,10 @@ IP ADDR - IP ADDR OF RABBITMQ SERVER
 amudavhost - VIRTUAL HOST NAME IN RABBITMQ
 mercury - QUEUE NAME
 '''
-credentials = pika.PlainCredentials('test', 'test') #username,password for rabbitMq.
-parameters = pika.ConnectionParameters('172.17.137.155',5672,'amudavhost',credentials)
+#credentials = pika.PlainCredentials('test', 'test') #username,password for rabbitMq.
+#parameters = pika.ConnectionParameters('172.17.137.155',5672,'amudavhost',credentials)
+credentials = pika.PlainCredentials('amuda', 'amuda2017') #username,password for rabbitMq.
+parameters = pika.ConnectionParameters('172.17.137.160',5672,'amudavhost',credentials)
 connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 channel.queue_declare(queue="mercury")
@@ -72,4 +74,3 @@ for key, value in dic.iteritems():
 	display(msg)
 
 #print(dic.items())
-
