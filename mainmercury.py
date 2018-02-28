@@ -55,22 +55,20 @@ def send(epc,ant,rssi):
 	s.connect(("8.8.8.8", 80))
 	ip = s.getsockname()[0]
 	s.close()
-
+	print(epc)
 #	dic[epc+","+ip] = ip+","+epc+","+timestamp	#It works perfectly.
 	dic[epc] = ip+","+epc+","+timestamp
 
-#	msg = ip+","+epc+","+timestamp
-#	channel.basic_publish(exchange='', routing_key='mercury', body=msg)
-#	print("[x] Sent ")
-#	display(msg)
 #READING OF TAGS
 reader.start_reading(lambda tag: send(tag.epc, tag.antenna, tag.rssi))
 time.sleep(1.0)	#need to increase the value for more tags to read. This is for one tag
 reader.stop_reading()
 for key, value in dic.iteritems():
 	msg = value
-	channel.basic_publish(exchange='', routing_key='mercury', body=msg)
-	print("[x] Sent ")
-	display(msg)
+	parts = msg.split(",")
+	viz = parts[1]+","+"695253.44712"+","+"190577.88868"+","+parts[2]
+	channel.basic_publish(exchange='', routing_key='mercury', body=viz)
+#	print("[x] Sent ")
+	display(viz)
 
 #print(dic.items())
