@@ -1,9 +1,10 @@
 import psycopg2
 from time import localtime, strftime
+import datetime
 
 
 def dbInsert1(c,d,e,f):
-	try:
+#	try:
 		conn = psycopg2.connect("dbname='smartbuilding' port='5432' user='amudalab3' host='172.17.137.160' password='amudalab'")
 		#the connection string	
 		cur = conn.cursor()		
@@ -11,8 +12,8 @@ def dbInsert1(c,d,e,f):
 		print("inserted row into main_asset table at ",datetime.datetime.now())
 		conn.commit()
 		cur.close()
-	except:
-		print("Connection Failed in attempt to main_asset")
+#	except:
+#		print("Connection Failed in attempt to main_asset")
 
 
 
@@ -23,7 +24,7 @@ cur.execute("SELECT DISTINCT ON (epc) epc,x,y,time FROM mercury_asset ORDER BY e
 rows = cur.fetchall()
 for row in rows:
 	time = strftime("%Y-%m-%d %H:%M:%S", localtime())
-#	dbInsert1(row[0],row[1],row[2],time)
+	dbInsert1(row[0],row[1],row[2],time)
     	print(row)
 conn.commit()
 cur.close()

@@ -4,12 +4,12 @@ import datetime
 
 
 
-def dbInsert1(c,d,e,f):
+def dbInsert(tagid,x,y,timestamp):
 	try:
 		conn = psycopg2.connect("dbname='smartbuilding' port='5432' user='amudalab3' host='172.17.137.160' password='amudalab'")
 		#the connection string	
 		cur = conn.cursor()		
-		cur.execute("INSERT INTO mercury_asset (epc,x,y,time,geom) VALUES (%s,%s,%s,%s,ST_SetSRID(ST_MakePoint(%s,%s),4326))",(c,d,e,f,d,e))
+		cur.execute("INSERT INTO mercury_asset (epc,x,y,time) VALUES (%s,%s,%s,%s)",(tagid,x,y,timestamp))
 		print("inserted row into mercury_asset table at ",datetime.datetime.now())
 		conn.commit()
 		cur.close()
@@ -23,7 +23,7 @@ def callback(ch, method, properties, body):
 	data = str(body).split(',')
 	a = len(data)
 	print(a)
-	dbInsert1(data[0],data[2],data[1],data[3]) #needed to insert count received from sender
+	dbInsert(data[0],data[2],data[1],data[3]) #needed to insert count received from sender
 	print(data[0],data[1],data[2],data[3])
 
 credentials = pika.PlainCredentials('amuda', 'amuda2017')
